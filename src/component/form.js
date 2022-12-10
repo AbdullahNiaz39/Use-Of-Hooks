@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import TableData from "./TableData";
 
 const Form = () => {
-  const [data, setData] = useState({});
+  const [data, setData] = useState({name:"",age:"",desc:""});
   const [storeData, setStoreData] = useState([]);
   const handleChange = (e) => {
     setData((data) => ({
@@ -15,8 +15,13 @@ const Form = () => {
     e.preventDefault();
   };
 
-  const dataSubmit = () => {
-    setStoreData((storeData) => [...storeData, data]);
+ const dataSubmit = (e) => {
+    if(data.name ===""|| data.age=="" || data.desc==="" )
+    {
+      e.preventDefault();
+    }
+    else{
+    setStoreData((storeData) => [...storeData, data]);}
     // console.log(...storeData);
   };
   return (

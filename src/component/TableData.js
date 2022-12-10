@@ -2,7 +2,7 @@ import React from "react";
 
 const TableData = ({ onData }) => {
   //   const { onData } = props;
-  return (
+  return onData.length==0?(
     <div>
       <table class="table table-striped">
         <thead>
@@ -25,7 +25,7 @@ const TableData = ({ onData }) => {
         </tbody>
       </table>
     </div>
-  );
+  ):"There is No Data";
 };
 
 export default TableData;

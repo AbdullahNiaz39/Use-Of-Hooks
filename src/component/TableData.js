@@ -23,9 +23,9 @@ const TableData = ({ onData }) => {
         </thead>
         <tbody>
 {onData.map((data, index) => (
-            <tr>
+            <tr key={index}>
               {columns.coloumed.map((column) => {
-                return <td>{data[column.id]}</td>;
+                return <td>{data[column.name]}</td>;
               })}
               {/* <th scope="row">{++index}</th>
               <td>{data.name}</td>

@@ -1,11 +1,12 @@
 import { Teacher } from "./teacher";
 import React from "react";
 import { createRoot } from "react-dom/client";
-import App from "./app";
+
+import Form from "./component/form";
 
 // const element=<h1>Hello world</h1>
 const root = createRoot(document.getElementById("root"));
-root.render(<App />);
+root.render(<Form />);
 
 // function sayhello(){
 //   for (var i = 0; i < 6; i++) {

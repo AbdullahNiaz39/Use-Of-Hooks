@@ -24,6 +24,9 @@ const Form = () => {
     }));
   };
 
+  const resetHandle = () => {
+    setData({ name: "", age: "", desc: "" });
+  };
   ///HandleSubmit
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -54,6 +57,13 @@ const Form = () => {
     setisFieldVisible(false);
   };
 
+  // for gerenric Component delete Functionality
+  const handleDelete = (index) => {
+    const numb = [...storeData];
+    numb.splice(index, 1);
+    setStoreData(numb);
+  };
+
   ///Return Data jsx
   return (
     <div style={{ margin: "10px", marginBottom: "10px", textAlign: "center" }}>
@@ -77,6 +87,7 @@ const Form = () => {
               <TextField
                 name={txt.name}
                 type="text"
+                id={txt.id}
                 label={txt.name}
                 onChange={handleChange}
                 value={data[txt.name] || ""}
@@ -87,6 +98,7 @@ const Form = () => {
         <Button
           variant="contained"
           size="large"
+          color="success"
           type="submit"
           style={{ maxWidth: "100px", marginTop: "20px" }}
         >
@@ -95,10 +107,20 @@ const Form = () => {
         <Button
           variant="contained"
           size="large"
+          color="secondary"
           onClick={AddField}
           style={{ maxWidth: "100px", marginTop: "20px" }}
         >
           Add
+        </Button>
+        <Button
+          variant="contained"
+          size="large"
+          color="warning"
+          onClick={resetHandle}
+          style={{ maxWidth: "100px", marginTop: "20px" }}
+        >
+          Reset
         </Button>
       </Box>
 
@@ -126,7 +148,7 @@ const Form = () => {
 
         {/* Show table using table component passing props */}
         <div style={{ marginTop: "20px" }}>
-          <TableData Data={storeData} />
+          <TableData Data={storeData} onDelete={handleDelete} />
         </div>
       </div>
     </div>

@@ -14,7 +14,8 @@ const Form = () => {
   //useHooks using isVisible new Field in Form
   const [isFieldVisible, setisFieldVisible] = useState(false);
   const [fieldAdd, setfieldAdd] = useState([{ name: "" }]);
-
+  const [isBtnVisible, setBtnVisible] = useState(false);
+  const [editbtn, setEditBtn] = useState();
   ///Functuion
   //handleChange for Start Field
   const handleChange = (e) => {
@@ -35,7 +36,7 @@ const Form = () => {
     // } else {
     setStoreData((storeData) => [...storeData, data]);
     // }
-    // setData({ name: "", age: "", desc: "" });
+    setData({ name: "", age: "", desc: "" });
   };
 
   //for Generic Field  to Show
@@ -64,6 +65,20 @@ const Form = () => {
     setStoreData(numb);
   };
 
+  ///for gerenic Componet Edit Functionality
+  const handleUpdate = () => {
+    // setData(storeData[index]);
+    storeData.splice(editbtn, 1, data);
+    setStoreData(storeData);
+    setBtnVisible(false);
+    setData({});
+  };
+  const handleEditButton = (index) => {
+    setData(storeData[index]);
+    setBtnVisible(true);
+    setEditBtn(index);
+  };
+
   ///Return Data jsx
   return (
     <div style={{ margin: "10px", marginBottom: "10px", textAlign: "center" }}>
@@ -77,7 +92,6 @@ const Form = () => {
         sx={{
           "& > :not(style)": { m: 2, width: "25ch" },
         }}
-        onSubmit={handleSubmit}
         noValidate
         autoComplete="off"
       >
@@ -95,15 +109,27 @@ const Form = () => {
             </React.Fragment>
           );
         })}
-        <Button
-          variant="contained"
-          size="large"
-          color="success"
-          type="submit"
-          style={{ maxWidth: "100px", marginTop: "20px" }}
-        >
-          submit
-        </Button>
+        {isBtnVisible ? (
+          <Button
+            variant="contained"
+            size="large"
+            color="info"
+            onClick={handleUpdate}
+            style={{ maxWidth: "100px", marginTop: "20px" }}
+          >
+            Update
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            size="large"
+            color="success"
+            onClick={handleSubmit}
+            style={{ maxWidth: "100px", marginTop: "20px" }}
+          >
+            submit
+          </Button>
+        )}
         <Button
           variant="contained"
           size="large"
@@ -148,7 +174,11 @@ const Form = () => {
 
         {/* Show table using table component passing props */}
         <div style={{ marginTop: "20px" }}>
-          <TableData Data={storeData} onDelete={handleDelete} />
+          <TableData
+            Data={storeData}
+            onDelete={handleDelete}
+            onEdit={handleEditButton}
+          />
         </div>
       </div>
     </div>

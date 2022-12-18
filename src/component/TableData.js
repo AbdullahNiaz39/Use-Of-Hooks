@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import React from "react";
 import columns from "./table.json";
 
-const TableData = ({ Data, onDelete }) => {
+const TableData = ({ Data, onDelete, onEdit }) => {
   //   const { onData } = props;
   return Data.length !== 0 ? (
     <div>
@@ -22,12 +22,8 @@ const TableData = ({ Data, onDelete }) => {
         <tbody>
           {Data.map((data, index) => (
             <tr key={index}>
-              {columns.coloumed.map((column, index) => {
-                return (
-                  <>
-                    <td key={index}>{data[column.name]}</td>
-                  </>
-                );
+              {columns.coloumed.map((column, ind) => {
+                return <td key={ind}>{data[column.name]}</td>;
               })}
               <td>
                 <Button
@@ -37,6 +33,18 @@ const TableData = ({ Data, onDelete }) => {
                   onClick={() => onDelete(index)}
                 >
                   Delete
+                </Button>
+                <Button
+                  variant="contained"
+                  size="small"
+                  color="primary"
+                  onClick={() => onEdit(index)}
+                  style={{
+                    maxWidth: "100px",
+                    marginLeft: "10px",
+                  }}
+                >
+                  Edit
                 </Button>
               </td>
             </tr>

@@ -1,36 +1,52 @@
+import { Button } from "@mui/material";
 import React from "react";
 import columns from "./table.json";
 
-const TableData = ({ onData }) => {
+const TableData = ({ Data, onDelete, onEdit }) => {
   //   const { onData } = props;
-  return onData.length !== 0 ? (
+  return Data.length !== 0 ? (
     <div>
-      <table class="table table-striped">
+      <table className="table table-striped">
         <thead>
           <tr>
-            {columns.coloumed.map((column) => {
+            {Object.keys(Data[Data.length-1]).map((column) => {
               return (
-                <th scope="col" key={column.id}>
-                  {column.name}
+                <th scope="col" key={column}>
+                  {column}
                 </th>
               );
             })}
-            {/* <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Age</th>
-            <th scope="col">Designation</th> */}
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
-{onData.map((data, index) => (
+          {Data.map((data, index) => (
             <tr key={index}>
-              {columns.coloumed.map((column) => {
-                return <td>{data[column.name]}</td>;
+              {Object.keys(Data[Data.length-1]).map((column, ind) => {
+                return <td key={ind}>{data[column]}</td>;
               })}
-              {/* <th scope="row">{++index}</th>
-              <td>{data.name}</td>
-              <td>{data.age}</td> 
-              <td>{data.desc}</td> */}
+              <td>
+                <Button
+                  variant="contained"
+                  size="small"
+                  color="error"
+                  onClick={() => onDelete(index)}
+                >
+                  Delete
+                </Button>
+                <Button
+                  variant="contained"
+                  size="small"
+                  color="primary"
+                  onClick={() => onEdit(index)}
+                  style={{
+                    maxWidth: "100px",
+                    marginLeft: "10px",
+                  }}
+                >
+                  Edit
+                </Button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -42,12 +58,3 @@ const TableData = ({ onData }) => {
 };
 
 export default TableData;
-
-// {
-//   "id": "age",
-//   "name": "age"
-// },
-// {
-//   "id": "Designation",
-//   "name": "Designation"
-// }

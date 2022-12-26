@@ -9,7 +9,7 @@ const TableData = ({ Data, onDelete, onEdit }) => {
       <table className="table table-striped">
         <thead>
           <tr>
-            {Object.keys(Data[Data.length-1]).map((column) => {
+            {Object.keys(Data[Data.length - 1]).map((column) => {
               return (
                 <th scope="col" key={column}>
                   {column}
@@ -22,7 +22,7 @@ const TableData = ({ Data, onDelete, onEdit }) => {
         <tbody>
           {Data.map((data, index) => (
             <tr key={index}>
-              {Object.keys(Data[Data.length-1]).map((column, ind) => {
+              {Object.keys(Data[Data.length - 1]).map((column, ind) => {
                 return <td key={ind}>{data[column]}</td>;
               })}
               <td>
@@ -30,7 +30,7 @@ const TableData = ({ Data, onDelete, onEdit }) => {
                   variant="contained"
                   size="small"
                   color="error"
-                  onClick={() => onDelete(index)}
+                  onClick={() => onDelete(data.id)}
                 >
                   Delete
                 </Button>

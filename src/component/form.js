@@ -1,29 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TableData from "./TableData";
 import { Button, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import columns from "./table.json";
 import axios from "axios";
+import api from "../api/post";
 const Form = () => {
-///useHooks passing in object and set Object
-  const [data, setData] = useState({name:"",age:"",desc:""});
+  ///useHooks passing in object and set Object
+  const [data, setData] = useState({});
   const [storeData, setStoreData] = useState([]);
-
-///
-// const url=""
-// function submit(e){
-//  e.preventDefault();
-//   axios.post(url,{
-// name:data.name,
-// age :data.age,
-// desc :data.desc,
-//   })
-// }
-
-
-
-
-
 
   //useHooks using generic form using json get Data
   const [formJson, setFormJson] = useState(columns.coloumed);
@@ -33,25 +18,54 @@ const Form = () => {
   const [fieldAdd, setfieldAdd] = useState([{ name: "" }]);
   const [isBtnVisible, setBtnVisible] = useState(false);
   const [editbtn, setEditBtn] = useState();
+
   ///Functuion
   //handleChange for Start Field
   const handleChange = (e) => {
+    console.log(e.target.value);
     setData((dataAdd) => ({
       ...dataAdd,
       [e.target.name]: e.target.value,
     }));
   };
 
+  //HandleSubmit
+  /*const handleSubmit = (e) => {
+    e.preventDefault();
+
+    setStoreData((storeData) => [...storeData, data]);
+    
+    //setData({ name: "", age: "", desc: "" });
+  };
+  
+  
+  /// for gerenric Component delete Functionality
+  const handleDelete = (index) => {
+    const numb = [...storeData];
+    numb.splice(index, 1);
+    setStoreData(numb);
+  };
+
+
+
+  ///for gerenic Componet Edit Functionality
+  const handleUpdate = () => {
+    // setData(storeData[index]);
+    storeData.splice(editbtn, 1, data);
+    setStoreData(storeData);
+    setBtnVisible(false);
+    setData({});
+  };
+  const handleEditButton = (index) => {
+    setData(storeData[index]);
+    setBtnVisible(true);
+    setEditBtn(index);
+  };
+  
+  */
+
   const resetHandle = () => {
     setData({ name: "", age: "", desc: "" });
-  };
-  ///HandleSubmit
-  const handleSubmit = (e) => {
-    e.preventDefault();
-   
-    setStoreData((storeData) => [...storeData, data]);
-    // }
-    //setData({ name: "", age: "", desc: "" });
   };
 
   //for Generic Field  to Show
@@ -73,22 +87,75 @@ const Form = () => {
     setisFieldVisible(false);
   };
 
-  // for gerenric Component delete Functionality
-  const handleDelete = (index) => {
-    const numb = [...storeData];
-    numb.splice(index, 1);
-    setStoreData(numb);
+  ///Api json using
+  ///To useEffect using to Fetch Data
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await api.get("/coloumed");
+        setStoreData(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, []);
+
+  ///Add data in Post method using axios
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const id = storeData.length ? storeData[storeData.length - 1].id + 1 : 1;
+    const newdata = {
+      id,
+      userId: data.userId,
+      title: data.title,
+      body: data.body,
+    };
+    try {
+      const res = await api.post("/coloumed", newdata);
+      console.log(res.data);
+      setStoreData((storeData) => [...storeData, res.data]);
+      setData({});
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  ///for gerenic Componet Edit Functionality
-  const handleUpdate = () => {
-    // setData(storeData[index]);
-    storeData.splice(editbtn, 1, data);
-    setStoreData(storeData);
-    setBtnVisible(false);
-    setData({});
+  ///Delete Api Data
+  const handleDelete = async (id) => {
+    try {
+      await api.delete(`coloumed/${id}`);
+      const numb = [...storeData];
+      numb.splice(id, 1);
+      setStoreData(numb);
+    } catch (err) {
+      console.log(err);
+    }
   };
-  const handleEditButton = (index) => {
+
+  /// Edit in PUT method using Axios
+  const handleUpdate = async () => {
+    const id = storeData[editbtn].id;
+    const newdata = {
+      id,
+      userId: data.userId,
+      title: data.title,
+      body: data.body,
+    };
+    try {
+      const res = await api.put(`coloumed/${storeData[editbtn].id}`, newdata);
+      // storeData.splice(storeData[editbtn].id, 1, newdata);
+      setStoreData(
+        storeData.map((post) => (post.id === id ? { ...res.data } : post))
+      );
+      setBtnVisible(false);
+      setData({});
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const handleEditButton = async (index) => {
     setData(storeData[index]);
     setBtnVisible(true);
     setEditBtn(index);
@@ -110,18 +177,20 @@ const Form = () => {
         noValidate
         autoComplete="off"
       >
-        {formJson.map((txt, index) => {
-          return (
+        {Object.keys(formJson[formJson.length - 1]).map((txt, index) => {
+          return txt !== "id" ? (
             <React.Fragment key={index}>
               <TextField
-                name={txt.name}
+                name={txt}
                 type="text"
                 id={txt.id}
-                label={txt.name}
+                label={txt}
                 onChange={handleChange}
-                value={data[txt.name] || ""}
+                value={data[txt] || ""}
               />
             </React.Fragment>
+          ) : (
+            ""
           );
         })}
         {isBtnVisible ? (
